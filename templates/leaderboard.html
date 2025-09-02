@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - Mukuru Loyalty Rewards{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header text-center">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-trophy text-warning me-3"></i>
+                    Loyalty Leaderboard
+                </h1>
+                <p class="lead">See how you rank among our top loyalty members</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="leaderboard-card">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-gradient text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="fas fa-medal me-2"></i>
+                            Top Loyalty Members
+                        </h3>
+                        <p class="mb-0 opacity-75">Based on total points earned</p>
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        <div class="leaderboard-list">
+                            {% for customer in customers %}
+                            <div class="leaderboard-item rank-{{ customer.rank }}">
+                                <div class="rank-badge">
+                                    {% if customer.rank == 1 %}
+                                        <i class="fas fa-crown text-warning"></i>
+                                        <span class="rank-number">#1</span>
+                                    {% elif customer.rank == 2 %}
+                                        <i class="fas fa-medal" style="color: #c0c0c0;"></i>
+                                        <span class="rank-number">#2</span>
+                                    {% elif customer.rank == 3 %}
+                                        <i class="fas fa-medal" style="color: #cd7f32;"></i>
+                                        <span class="rank-number">#3</span>
+                                    {% else %}
+                                        <span class="rank-number">#{{ customer.rank }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="customer-avatar">
+                                    <i class="fas fa-user-circle fa-3x text-mukuru"></i>
+                                </div>
+                                
+                                <div class="customer-info flex-grow-1">
+                                    <h5 class="mb-1">{{ customer.name }}</h5>
+                                    <div class="tier-badge tier-{{ customer.tier.lower() }}">
+                                        <i class="fas fa-star me-1"></i>
+                                        {{ customer.tier }}
+                                    </div>
+                                </div>
+                                
+                                <div class="points-display">
+                                    <div class="points-amount">
+                                        <i class="fas fa-coins text-warning me-2"></i>
+                                        <span class="points-number">{{ customer.points_balance }}</span>
+                                    </div>
+                                    <small class="text-muted">Loyalty Points</small>
+                                </div>
+                                
+                                {% if session.customer_id == customer.id %}
+                                <div class="current-user-badge">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-user me-1"></i>
+                                        You
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motivation Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="motivation-card text-center">
+                <div class="card bg-gradient text-white">
+                    <div class="card-body py-5">
+                        <i class="fas fa-rocket fa-3x mb-3"></i>
+                        <h3>Climb the Leaderboard!</h3>
+                        <p class="lead mb-4">Send more money to earn points and rise through the ranks!</p>
+                        {% if session.customer_id %}
+                        <a href="{{ url_for('send_money') }}" class="btn btn-warning btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Send Money & Earn Points
+                        </a>
+                        {% else %}
+                        <button class="btn btn-warning btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Login to Start Earning
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal (same as homepage) -->
+{% if not session.customer_id %}
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="fas fa-sign-in-alt text-mukuru me-2"></i>
+                    Login to Your Account
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="Enter your email"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Enter your password"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-mukuru btn-lg">
+                            <span class="button-text">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Login
+                            </span>
+                            <span class="button-loading d-none">
+                                <i class="fas fa-spinner fa-spin me-2"></i>
+                                Logging in...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="text-muted mb-3">Demo Accounts:</p>
+                    <div class="demo-accounts">
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('john.doe@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            John Doe
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('sarah.smith@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Sarah Smith
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm mb-2" onclick="quickLogin('michael.j@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Michael Johnson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Login form handling (same as homepage)
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const button = e.target.querySelector('button[type="submit"]');
+    
+    setButtonLoading(button, true);
+    
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        setButtonLoading(button, false);
+        
+        if (data.success) {
+            window.location.href = data.redirect || '/dashboard';
+        } else {
+            showError(data.message || 'Login failed');
+        }
+    })
+    .catch(error => {
+        console.error('Login error:', error);
+        setButtonLoading(button, false);
+        showError('Login failed. Please try again.');
+    });
+});
+
+function quickLogin(email) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = 'demo123';
+    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+}
+
+function setButtonLoading(button, isLoading) {
+    const buttonText = button.querySelector('.button-text');
+    const buttonLoading = button.querySelector('.button-loading');
+    
+    if (isLoading) {
+        buttonText.classList.add('d-none');
+        buttonLoading.classList.remove('d-none');
+        button.disabled = true;
+    } else {
+        buttonText.classList.remove('d-none');
+        buttonLoading.classList.add('d-none');
+        button.disabled = false;
+    }
+}
+
+function showError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('loginForm');
+    form.insertBefore(alertDiv, form.firstChild);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endif %}
+{% endblock %}

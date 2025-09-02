@@ -1,0 +1,34 @@
+/* static/css/mukuru.css */
+:root{
+  --mukuru-orange:#F26A21;
+  --mukuru-orange-deep:#D9541A;
+  --mukuru-red:#BD2426;
+  --mukuru-charcoal:#5F5F5F;
+  --mukuru-sand:#FFF7F2;
+}
+body{ background:var(--mukuru-sand); color:#222; }
+
+/* Keep your existing markup working: .bg-mukuru */
+.bg-mukuru{
+  background:linear-gradient(90deg,var(--mukuru-orange),var(--mukuru-orange-deep)) !important;
+}
+
+/* Optional helpers you can use in pages */
+.navbar-brand, .nav-link, .navbar-text { color:#fff !important; }
+.btn-brand{ background:var(--mukuru-red); color:#fff; border:0; }
+.btn-brand:hover{ opacity:.95; }
+.card-brand{ border:0; border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,.08); }
+
+/* Hero area uses your hero image */
+.hero{
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,0)),
+    url("../brand/hero.jpg") center/cover no-repeat;
+  border-bottom-left-radius:1rem;
+  border-bottom-right-radius:1rem;
+}
+.hero .title{ color:#fff; }
+.hero .subtitle{ color:rgba(255,255,255,.9); }
+
+/* Points pill */
+.badge-points{ background:#FDD835; color:#222; }

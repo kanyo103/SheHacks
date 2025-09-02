@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block title %}Demo Presentation - Mukuru Loyalty Rewards{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header text-center">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-presentation-screen text-mukuru me-3"></i>
+                    Demo Presentation
+                </h1>
+                <p class="lead">Mukuru Loyalty Rewards Hub - Complete Solution</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Presentation Slides -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="presentation-container">
+                
+                <!-- Slide 1: Introduction -->
+                <div class="slide-card mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient text-white">
+                            <h3 class="mb-0">
+                                <span class="slide-number">01</span>
+                                Project Overview
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h4 class="text-mukuru mb-3">Mukuru Loyalty Rewards Hub</h4>
+                                    <ul class="feature-list">
+                                        <li><i class="fas fa-check text-success me-2"></i>Complete end-to-end loyalty program</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Send money & earn points (1 point per R100)</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Interactive rewards marketplace</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Gamification with tiers & achievements</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Real-time animations & smooth UX</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="stats-preview">
+                                        <div class="stat-item">
+                                            <i class="fas fa-users fa-2x text-mukuru"></i>
+                                            <h5>3 Demo Customers</h5>
+                                            <p>John, Sarah, Michael</p>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fas fa-gift fa-2x text-warning"></i>
+                                            <h5>6 Reward Categories</h5>
+                                            <p>Airtime, Grocery, Fuel, etc.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Core Features -->
+                <div class="slide-card mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient text-white">
+                            <h3 class="mb-0">
+                                <span class="slide-number">02</span>
+                                Core Features Implemented
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="features-grid">
+                                <div class="feature-box">
+                                    <i class="fas fa-paper-plane fa-3x text-mukuru mb-3"></i>
+                                    <h5>Send Money</h5>
+                                    <p>Secure remittance simulation with real-time validation and animated feedback</p>
+                                </div>
+                                <div class="feature-box">
+                                    <i class="fas fa-coins fa-3x text-warning mb-3"></i>
+                                    <h5>Earn Points</h5>
+                                    <p>Automatic point calculation (1 per R100) with instant balance updates</p>
+                                </div>
+                                <div class="feature-box">
+                                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                                    <h5>Manage Progress</h5>
+                                    <p>Interactive dashboard with transaction history and tier progression</p>
+                                </div>
+                                <div class="feature-box">
+                                    <i class="fas fa-shopping-cart fa-3x text-danger mb-3"></i>
+                                    <h5>Redeem Rewards</h5>
+                                    <p>Complete marketplace with 6 categories and smooth redemption flow</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Technical Implementation -->
+                <div class="slide-card mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient text-white">
+                            <h3 class="mb-0">
+                                <span class="slide-number">03</span>
+                                Technical Architecture
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="text-mukuru mb-3">Backend (Flask API)</h5>
+                                    <ul class="tech-list">
+                                        <li><i class="fab fa-python me-2"></i>Flask web framework</li>
+                                        <li><i class="fas fa-database me-2"></i>In-memory data store</li>
+                                        <li><i class="fas fa-shield-alt me-2"></i>Session-based authentication</li>
+                                        <li><i class="fas fa-cogs me-2"></i>RESTful API endpoints</li>
+                                        <li><i class="fas fa-clock me-2"></i>Real-time point calculation</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="text-mukuru mb-3">Frontend (Responsive Web)</h5>
+                                    <ul class="tech-list">
+                                        <li><i class="fab fa-html5 me-2"></i>HTML5 + CSS3 + JavaScript</li>
+                                        <li><i class="fab fa-bootstrap me-2"></i>Bootstrap 5 framework</li>
+                                        <li><i class="fas fa-mobile-alt me-2"></i>Fully responsive design</li>
+                                        <li><i class="fas fa-magic me-2"></i>Custom animations & effects</li>
+                                        <li><i class="fas fa-paint-brush me-2"></i>Mukuru brand styling</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4: Creative Features -->
+                <div class="slide-card mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient text-white">
+                            <h3 class="mb-0">
+                                <span class="slide-number">04</span>
+                                Creative & Bonus Features
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="creative-features">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="text-warning mb-3">
+                                            <i class="fas fa-sparkles me-2"></i>
+                                            Animations & UX
+                                        </h5>
+                                        <ul>
+                                            <li>Floating money animation during send</li>
+                                            <li>Confetti celebrations for success</li>
+                                            <li>Floating background coins</li>
+                                            <li>Smooth page transitions</li>
+                                            <li>Interactive progress bars</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="text-success mb-3">
+                                            <i class="fas fa-gamepad me-2"></i>
+                                            Gamification
+                                        </h5>
+                                        <ul>
+                                            <li>3-tier system (Bronze/Silver/Gold)</li>
+                                            <li>Achievement badges system</li>
+                                            <li>Customer leaderboard rankings</li>
+                                            <li>Progress visualization</li>
+                                            <li>Instant feedback loops</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Demo Flow -->
+                <div class="slide-card mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient text-white">
+                            <h3 class="mb-0">
+                                <span class="slide-number">05</span>
+                                Live Demo Flow
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="demo-flow">
+                                <div class="flow-step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h6>Login</h6>
+                                        <p>Use demo account or login with email + "demo123"</p>
+                                    </div>
+                                </div>
+                                <div class="flow-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="flow-step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h6>Send Money</h6>
+                                        <p>Send R500 to see animated money flying + 5 points earned</p>
+                                    </div>
+                                </div>
+                                <div class="flow-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="flow-step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h6>View Progress</h6>
+                                        <p>Check dashboard for points, tier progress, and achievements</p>
+                                    </div>
+                                </div>
+                                <div class="flow-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="flow-step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-content">
+                                        <h6>Redeem Rewards</h6>
+                                        <p>Browse marketplace and redeem available rewards</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Demo Buttons -->
+                <div class="demo-actions text-center">
+                    <h4 class="mb-4">Try the Demo Live!</h4>
+                    <div class="demo-buttons">
+                        {% if not session.customer_id %}
+                        <button class="btn btn-mukuru btn-lg me-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-play me-2"></i>
+                            Start Demo
+                        </button>
+                        {% else %}
+                        <a href="{{ url_for('send_money') }}" class="btn btn-mukuru btn-lg me-3">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Send Money Demo
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('leaderboard') }}" class="btn btn-warning btn-lg">
+                            <i class="fas fa-trophy me-2"></i>
+                            View Leaderboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login Modal (same as homepage) -->
+{% if not session.customer_id %}
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="fas fa-sign-in-alt text-mukuru me-2"></i>
+                    Login to Your Account
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="Enter your email"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Enter your password"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-mukuru btn-lg">
+                            <span class="button-text">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Login
+                            </span>
+                            <span class="button-loading d-none">
+                                <i class="fas fa-spinner fa-spin me-2"></i>
+                                Logging in...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="text-muted mb-3">Demo Accounts:</p>
+                    <div class="demo-accounts">
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('john.doe@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            John Doe
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('sarah.smith@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Sarah Smith
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm mb-2" onclick="quickLogin('michael.j@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Michael Johnson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Login form handling (same as homepage)
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const button = e.target.querySelector('button[type="submit"]');
+    
+    setButtonLoading(button, true);
+    
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        setButtonLoading(button, false);
+        
+        if (data.success) {
+            window.location.href = data.redirect || '/dashboard';
+        } else {
+            showError(data.message || 'Login failed');
+        }
+    })
+    .catch(error => {
+        console.error('Login error:', error);
+        setButtonLoading(button, false);
+        showError('Login failed. Please try again.');
+    });
+});
+
+function quickLogin(email) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = 'demo123';
+    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+}
+
+function setButtonLoading(button, isLoading) {
+    const buttonText = button.querySelector('.button-text');
+    const buttonLoading = button.querySelector('.button-loading');
+    
+    if (isLoading) {
+        buttonText.classList.add('d-none');
+        buttonLoading.classList.remove('d-none');
+        button.disabled = true;
+    } else {
+        buttonText.classList.remove('d-none');
+        buttonLoading.classList.add('d-none');
+        button.disabled = false;
+    }
+}
+
+function showError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('loginForm');
+    form.insertBefore(alertDiv, form.firstChild);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endif %}
+{% endblock %}

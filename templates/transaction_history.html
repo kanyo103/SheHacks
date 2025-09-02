@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History - {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-history text-mukuru me-3"></i>
+                    Transaction History
+                </h1>
+                <p class="lead">Complete overview of your remittance transactions and earned points</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ transactions|length }}</h3>
+                    <p class="stat-label">Total Transactions</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-content">
+                    {% set total_sent = transactions|sum(attribute='amount') %}
+                    <h3 class="stat-number">R{{ "%.2f"|format(total_sent) }}</h3>
+                    <p class="stat-label">Total Sent</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-content">
+                    {% set total_points = transactions|sum(attribute='points_earned') %}
+                    <h3 class="stat-number">{{ total_points }}</h3>
+                    <p class="stat-label">Total Points Earned</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ customer.points_balance }}</h3>
+                    <p class="stat-label">Current Balance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions Timeline -->
+    <div class="row">
+        <div class="col-12">
+            <div class="content-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>
+                        All Transactions
+                    </h5>
+                    <div class="transaction-filters">
+                        <button class="btn btn-sm btn-outline-mukuru active" onclick="filterTransactions('all')">
+                            All
+                        </button>
+                        <button class="btn btn-sm btn-outline-mukuru" onclick="filterTransactions('this-month')">
+                            This Month
+                        </button>
+                        <button class="btn btn-sm btn-outline-mukuru" onclick="filterTransactions('last-month')">
+                            Last Month
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    {% if transactions %}
+                        <div class="transaction-timeline">
+                            {% for transaction in transactions %}
+                            <div class="timeline-item" data-date="{{ transaction.timestamp[:7] }}">
+                                <div class="timeline-date">
+                                    <div class="date-day">{{ transaction.timestamp[8:10] }}</div>
+                                    <div class="date-month">{{ transaction.timestamp[5:7] }}</div>
+                                </div>
+                                
+                                <div class="timeline-marker">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                
+                                <div class="timeline-content">
+                                    <div class="transaction-card">
+                                        <div class="transaction-header">
+                                            <div class="transaction-title">
+                                                <h6 class="mb-1">Money Sent to {{ transaction.recipient }}</h6>
+                                                <small class="text-muted">{{ transaction.timestamp[:19] }}</small>
+                                            </div>
+                                            <div class="transaction-amount">
+                                                <span class="amount-sent">R{{ "%.2f"|format(transaction.amount) }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="transaction-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8">
+                                                    <div class="transaction-details">
+                                                        <span class="detail-item">
+                                                            <i class="fas fa-hashtag me-1"></i>
+                                                            ID: {{ transaction.id[:8] }}...
+                                                        </span>
+                                                        <span class="detail-item">
+                                                            <i class="fas fa-user me-1"></i>
+                                                            To: {{ transaction.recipient }}
+                                                        </span>
+                                                        <span class="detail-item">
+                                                            <i class="fas fa-check-circle text-success me-1"></i>
+                                                            Completed
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 text-end">
+                                                    <div class="points-earned-display">
+                                                        <span class="points-badge">
+                                                            <i class="fas fa-coins text-warning me-1"></i>
+                                                            +{{ transaction.points_earned }} pts
+                                                        </span>
+                                                        <small class="text-muted d-block">Points Earned</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Load More Button (if needed) -->
+                        {% if transactions|length > 10 %}
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-mukuru" id="loadMoreBtn" onclick="loadMoreTransactions()">
+                                <i class="fas fa-chevron-down me-2"></i>
+                                Load More Transactions
+                            </button>
+                        </div>
+                        {% endif %}
+                        
+                    {% else %}
+                        <div class="empty-state text-center py-5">
+                            <i class="fas fa-receipt fa-4x text-muted mb-4"></i>
+                            <h4>No Transactions Yet</h4>
+                            <p class="text-muted mb-4">
+                                You haven't made any remittance transactions yet. 
+                                Start sending money to earn your first loyalty points!
+                            </p>
+                            <a href="{{ url_for('send_money') }}" class="btn btn-mukuru btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Send Your First Transaction
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="quick-actions-card text-center">
+                <h5 class="mb-3">
+                    <i class="fas fa-rocket me-2"></i>
+                    What's Next?
+                </h5>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="{{ url_for('send_money') }}" class="btn btn-mukuru">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Send More Money
+                    </a>
+                    <a href="{{ url_for('rewards') }}" class="btn btn-warning">
+                        <i class="fas fa-gift me-2"></i>
+                        Browse Rewards
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentFilter = 'all';
+let visibleTransactions = 10;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize with first 10 transactions visible
+    showTransactions();
+    
+    // Add fade-in animation to timeline items
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = '0.1s';
+                entry.target.classList.add('animate__animated', 'animate__fadeInLeft');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        observer.observe(item);
+    });
+});
+
+function filterTransactions(filter) {
+    currentFilter = filter;
+    visibleTransactions = 10; // Reset visible count
+    
+    // Update active button
+    document.querySelectorAll('.transaction-filters .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    showTransactions();
+}
+
+function showTransactions() {
+    const allItems = document.querySelectorAll('.timeline-item');
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    const lastMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const lastMonthYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    
+    let visibleCount = 0;
+    
+    allItems.forEach(item => {
+        const itemDate = item.getAttribute('data-date');
+        const [year, month] = itemDate.split('-').map(Number);
+        
+        let shouldShow = false;
+        
+        switch(currentFilter) {
+            case 'all':
+                shouldShow = visibleCount < visibleTransactions;
+                break;
+            case 'this-month':
+                shouldShow = year === currentYear && month === currentMonth;
+                break;
+            case 'last-month':
+                shouldShow = year === lastMonthYear && month === lastMonth;
+                break;
+        }
+        
+        if (shouldShow) {
+            item.style.display = 'flex';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Show/hide load more button
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+        if (currentFilter === 'all' && visibleCount >= visibleTransactions && allItems.length > visibleTransactions) {
+            loadMoreBtn.style.display = 'block';
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
+    }
+}
+
+function loadMoreTransactions() {
+    visibleTransactions += 10;
+    showTransactions();
+}
+
+// Add click animation to transaction cards
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.transaction-card')) {
+        const card = e.target.closest('.transaction-card');
+        card.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            card.style.transform = 'scale(1)';
+        }, 150);
+    }
+});
+</script>
+{% endblock %}

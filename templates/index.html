@@ -1,0 +1,550 @@
+{% extends "base.html" %}
+
+{% block title %}Mukuru Rewards - Earn Points Every Time You Send Money{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-3 fw-bold text-white mb-4">
+                        <i class="fas fa-gift text-warning me-3"></i>
+                        Mukuru Rewards
+                    </h1>
+                    <p class="lead text-white mb-4">
+                        Earn loyalty points every time you send money home. The more you send, the more you earn. 
+                        Redeem points for airtime, groceries, fuel vouchers and more!
+                    </p>
+                    
+                    <div class="reward-highlight mb-4">
+                        <div class="highlight-card">
+                            <div class="highlight-icon">
+                                <i class="fas fa-coins fa-2x text-warning"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <h4 class="text-white mb-1">1 Point = R100 Sent</h4>
+                                <p class="text-white-50 mb-0">Automatic rewards with every remittance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if not session.customer_id %}
+                    <div class="cta-buttons">
+                        <button class="btn btn-warning btn-lg me-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Start Earning Rewards
+                        </button>
+                        <a href="#how-it-works" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Learn More
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('send_money') }}" class="btn btn-warning btn-lg me-3">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Send Money & Earn Points
+                        </a>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            View My Rewards
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-stats">
+                    <div class="stats-card">
+                        <h3 class="text-white text-center mb-4">Why Choose Mukuru Rewards?</h3>
+                        
+                        <div class="value-items">
+                            <div class="value-item">
+                                <i class="fas fa-star text-warning"></i>
+                                <div>
+                                    <h5 class="text-white">Earn As You Send</h5>
+                                    <p class="text-white-50">Get rewarded for every remittance transaction</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <i class="fas fa-trophy text-warning"></i>
+                                <div>
+                                    <h5 class="text-white">Tier Benefits</h5>
+                                    <p class="text-white-50">Unlock Bronze, Silver & Gold rewards</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <i class="fas fa-gift text-warning"></i>
+                                <div>
+                                    <h5 class="text-white">Amazing Rewards</h5>
+                                    <p class="text-white-50">Airtime, groceries, fuel & more</p>
+                                </div>
+                            </div>
+                            
+                            <div class="value-item">
+                                <i class="fas fa-clock text-warning"></i>
+                                <div>
+                                    <h5 class="text-white">Instant Points</h5>
+                                    <p class="text-white-50">Points added immediately after sending</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold text-mukuru">How Mukuru Rewards Works</h2>
+                <p class="lead text-muted">Simple steps to start earning rewards with every money transfer</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4>Join Mukuru Rewards</h4>
+                    <p>Sign up for free to start earning points on every remittance</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h4>Send Money</h4>
+                    <p>Use any Mukuru channel to send money to your loved ones</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h4>Earn Points</h4>
+                    <p>Get 1 point for every R100 sent automatically</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="step-card text-center">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h4>Redeem Rewards</h4>
+                    <p>Exchange points for airtime, vouchers and more</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ways to Send Money Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold text-mukuru">Multiple Ways to Send Money & Earn Points</h2>
+                <p class="lead text-muted">Choose your preferred method to send money and start earning rewards</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="send-method-card h-100">
+                    <div class="method-icon">
+                        <i class="fab fa-whatsapp fa-3x text-success"></i>
+                    </div>
+                    <h4>WhatsApp</h4>
+                    <p>Send money effortlessly through WhatsApp. Quick, convenient and secure.</p>
+                    <div class="method-details">
+                        <strong>+27 860 018 555</strong>
+                    </div>
+                    <a href="https://api.whatsapp.com/send?phone=27860018555&text=Hi" class="btn btn-success" target="_blank">
+                        <i class="fab fa-whatsapp me-2"></i>Send via WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="send-method-card h-100">
+                    <div class="method-icon">
+                        <i class="fas fa-mobile-alt fa-3x text-mukuru"></i>
+                    </div>
+                    <h4>Mukuru App</h4>
+                    <p>Download our mobile app for the fastest way to send money and track your rewards.</p>
+                    <div class="method-details">
+                        <small>Available on Google Play, App Store & Huawei</small>
+                    </div>
+                    <a href="https://www.mukuru.com/download-mukuru-app/" class="btn btn-mukuru" target="_blank">
+                        <i class="fas fa-download me-2"></i>Download App
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="send-method-card h-100">
+                    <div class="method-icon">
+                        <i class="fas fa-phone fa-3x text-info"></i>
+                    </div>
+                    <h4>USSD & Call</h4>
+                    <p>Use your phone's USSD feature or call us directly for assistance.</p>
+                    <div class="method-details">
+                        <strong>*130*566#</strong><br>
+                        <strong>+27 860 018 555</strong>
+                    </div>
+                    <a href="tel:*130*566#" class="btn btn-info">
+                        <i class="fas fa-phone me-2"></i>Dial *130*566#
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mt-3">
+            <div class="col-lg-6">
+                <div class="send-method-card h-100">
+                    <div class="method-icon">
+                        <i class="fas fa-store fa-3x text-warning"></i>
+                    </div>
+                    <h4>Branches & Booths</h4>
+                    <p>Visit any Mukuru branch or booth near you for in-person assistance.</p>
+                    <a href="https://www.mukuru.com/sa/find-us/branches-booths/" class="btn btn-warning" target="_blank">
+                        <i class="fas fa-map-marker-alt me-2"></i>Find Locations
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="send-method-card h-100">
+                    <div class="method-icon">
+                        <i class="fas fa-globe fa-3x text-danger"></i>
+                    </div>
+                    <h4>Mobile Website</h4>
+                    <p>Access our mobile-optimized website for quick transactions on any device.</p>
+                    <a href="https://mobile.mukuru.com/" class="btn btn-danger" target="_blank">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Mobile Site
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Rewards Preview -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold text-mukuru">Redeem Your Points</h2>
+                <p class="lead text-muted">Choose from our extensive rewards catalog</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="reward-preview-card">
+                    <div class="reward-icon">
+                        <i class="fas fa-mobile-alt fa-3x text-mukuru"></i>
+                    </div>
+                    <h5>Airtime Vouchers</h5>
+                    <p>From 50 points</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="reward-preview-card">
+                    <div class="reward-icon">
+                        <i class="fas fa-shopping-cart fa-3x text-success"></i>
+                    </div>
+                    <h5>Grocery Vouchers</h5>
+                    <p>From 100 points</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="reward-preview-card">
+                    <div class="reward-icon">
+                        <i class="fas fa-gas-pump fa-3x text-warning"></i>
+                    </div>
+                    <h5>Fuel Vouchers</h5>
+                    <p>From 200 points</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="reward-preview-card">
+                    <div class="reward-icon">
+                        <i class="fas fa-plane fa-3x text-info"></i>
+                    </div>
+                    <h5>Travel Vouchers</h5>
+                    <p>From 1000 points</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            {% if session.customer_id %}
+            <a href="{{ url_for('rewards') }}" class="btn btn-mukuru btn-lg">
+                <i class="fas fa-gift me-2"></i>Browse All Rewards
+            </a>
+            {% else %}
+            <button class="btn btn-mukuru btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <i class="fas fa-gift me-2"></i>Join & Browse Rewards
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Core Values Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold text-mukuru">Our Core Values</h2>
+                <p class="lead text-muted">What makes Mukuru Rewards special</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt fa-3x text-mukuru"></i>
+                    </div>
+                    <h4>Trusted & Secure</h4>
+                    <p>Over 20 years of experience serving millions of customers across Africa with secure money transfers.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-users fa-3x text-mukuru"></i>
+                    </div>
+                    <h4>Customer First</h4>
+                    <p>Every feature is designed with our customers in mind, making your money transfer experience rewarding.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="value-card text-center">
+                    <div class="value-icon">
+                        <i class="fas fa-heart fa-3x text-mukuru"></i>
+                    </div>
+                    <h4>Building Connections</h4>
+                    <p>We help families stay connected across borders while rewarding your loyalty every step of the way.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-mukuru text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-12">
+                <h2 class="display-6 fw-bold mb-4">Ready to Start Earning Rewards?</h2>
+                <p class="lead mb-4">Join thousands of customers who are already earning points with every money transfer</p>
+                
+                {% if not session.customer_id %}
+                <button class="btn btn-warning btn-lg me-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Join Mukuru Rewards
+                </button>
+                <a href="#how-it-works" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-question-circle me-2"></i>
+                    Learn More
+                </a>
+                {% else %}
+                <a href="{{ url_for('send_money') }}" class="btn btn-warning btn-lg me-3">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Send Money Now
+                </a>
+                <a href="{{ url_for('rewards') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-gift me-2"></i>
+                    Browse Rewards
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Login Modal -->
+{% if not session.customer_id %}
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <i class="fas fa-sign-in-alt text-mukuru me-2"></i>
+                    Join Mukuru Rewards
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <p class="text-muted">Sign in to start earning rewards with every money transfer</p>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email" 
+                                   placeholder="Enter your email"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Enter your password"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-mukuru btn-lg">
+                            <span class="button-text">
+                                <i class="fas fa-sign-in-alt me-2"></i>
+                                Start Earning Rewards
+                            </span>
+                            <span class="button-loading d-none">
+                                <i class="fas fa-spinner fa-spin me-2"></i>
+                                Signing in...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="text-muted mb-3">Try with Demo Accounts:</p>
+                    <div class="demo-accounts">
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('john.doe@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            John Doe
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="quickLogin('sarah.smith@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Sarah Smith
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm mb-2" onclick="quickLogin('michael.j@email.com')">
+                            <i class="fas fa-user me-1"></i>
+                            Michael Johnson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Login form handling
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const button = e.target.querySelector('button[type="submit"]');
+    
+    setButtonLoading(button, true);
+    
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        setButtonLoading(button, false);
+        
+        if (data.success) {
+            window.location.href = data.redirect || '/dashboard';
+        } else {
+            showError(data.message || 'Login failed');
+        }
+    })
+    .catch(error => {
+        console.error('Login error:', error);
+        setButtonLoading(button, false);
+        showError('Login failed. Please try again.');
+    });
+});
+
+function quickLogin(email) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = 'demo123';
+    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+}
+
+function setButtonLoading(button, isLoading) {
+    const buttonText = button.querySelector('.button-text');
+    const buttonLoading = button.querySelector('.button-loading');
+    
+    if (isLoading) {
+        buttonText.classList.add('d-none');
+        buttonLoading.classList.remove('d-none');
+        button.disabled = true;
+    } else {
+        buttonText.classList.remove('d-none');
+        buttonLoading.classList.add('d-none');
+        button.disabled = false;
+    }
+}
+
+function showError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const form = document.getElementById('loginForm');
+    form.insertBefore(alertDiv, form.firstChild);
+    
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endif %}
+{% endblock %}

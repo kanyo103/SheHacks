@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-card">
+                <h1 class="display-5 fw-bold mb-2">
+                    Welcome back, {{ customer.name }}! 
+                    <i class="fas fa-hand-wave text-warning"></i>
+                </h1>
+                <p class="lead text-muted">Manage your loyalty points and explore amazing rewards</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <!-- Points Balance -->
+        <div class="col-md-3">
+            <div class="stat-card points-card">
+                <div class="stat-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ customer.points_balance }}</h3>
+                    <p class="stat-label">Loyalty Points</p>
+                    <div class="floating-coins">
+                        <i class="fas fa-circle"></i>
+                        <i class="fas fa-circle"></i>
+                        <i class="fas fa-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Tier -->
+        <div class="col-md-3">
+            <div class="stat-card tier-card">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number tier-{{ customer.tier.lower() }}">{{ customer.tier }}</h3>
+                    <p class="stat-label">Customer Tier</p>
+                    {% if customer.tier == 'Bronze' %}
+                        <small class="text-muted">500 points to Silver</small>
+                    {% elif customer.tier == 'Silver' %}
+                        <small class="text-muted">{{ 1000 - customer.points_balance }} points to Gold</small>
+                    {% else %}
+                        <small class="text-success">Gold Member!</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Transactions -->
+        <div class="col-md-3">
+            <div class="stat-card transactions-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ total_transactions }}</h3>
+                    <p class="stat-label">Total Transactions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-3">
+            <div class="stat-card action-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number">Quick</h3>
+                    <p class="stat-label">Actions</p>
+                    <div class="quick-actions">
+                        <a href="{{ url_for('send_money') }}" class="btn btn-sm btn-mukuru me-2">
+                            <i class="fas fa-paper-plane"></i>
+                        </a>
+                        <a href="{{ url_for('rewards') }}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-gift"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="progress-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Progress to Next Tier
+                </h5>
+                {% set next_tier_points = 500 if customer.tier == 'Bronze' else 1000 %}
+                {% set progress_percentage = (customer.points_balance / next_tier_points * 100) if customer.tier != 'Gold' else 100 %}
+                
+                <div class="progress mb-3" style="height: 15px;">
+                    <div class="progress-bar progress-bar-animated bg-gradient" 
+                         role="progressbar" 
+                         style="width: {{ progress_percentage }}%">
+                    </div>
+                </div>
+                
+                {% if customer.tier != 'Gold' %}
+                    <div class="d-flex justify-content-between">
+                        <small>{{ customer.points_balance }} points</small>
+                        <small>{{ next_tier_points }} points ({{ customer.tier == 'Bronze' and 'Silver' or 'Gold' }})</small>
+                    </div>
+                {% else %}
+                    <p class="text-success mb-0">
+                        <i class="fas fa-crown me-2"></i>
+                        Congratulations! You've reached the highest tier!
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="row g-4">
+        <!-- Recent Transactions -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Recent Transactions
+                    </h5>
+                    <a href="{{ url_for('transaction_history') }}" class="btn btn-sm btn-outline-mukuru">
+                        View All
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_transactions %}
+                        <div class="transaction-timeline">
+                            {% for transaction in recent_transactions %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="mb-1">Sent to {{ transaction.recipient }}</h6>
+                                            <p class="text-muted mb-1">R{{ "%.2f"|format(transaction.amount) }}</p>
+                                            <small class="text-muted">{{ transaction.timestamp[:10] }}</small>
+                                        </div>
+                                        <div class="points-earned">
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-plus me-1"></i>
+                                                {{ transaction.points_earned }} pts
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state text-center py-4">
+                            <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                            <h6>No transactions yet</h6>
+                            <p class="text-muted">Start sending money to earn your first loyalty points!</p>
+                            <a href="{{ url_for('send_money') }}" class="btn btn-mukuru">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Send Money Now
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Achievements -->
+        <div class="col-lg-4">
+            <!-- Quick Send -->
+            <div class="content-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-rocket me-2"></i>
+                        Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('send_money') }}" class="btn btn-mukuru btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Send Money
+                        </a>
+                        <a href="{{ url_for('rewards') }}" class="btn btn-warning btn-lg">
+                            <i class="fas fa-gift me-2"></i>
+                            Browse Rewards
+                        </a>
+                        <a href="{{ url_for('transaction_history') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-history me-2"></i>
+                            View History
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-medal me-2"></i>
+                        Achievements
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="achievement-list">
+                        {% if total_transactions >= 1 %}
+                        <div class="achievement-item achieved">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span>First Transaction</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if customer.points_balance >= 100 %}
+                        <div class="achievement-item achieved">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span>100 Points Club</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if customer.tier == 'Silver' or customer.tier == 'Gold' %}
+                        <div class="achievement-item achieved">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span>Silver Member</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if customer.tier == 'Gold' %}
+                        <div class="achievement-item achieved">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <span>Gold Member</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if total_transactions < 1 %}
+                        <div class="achievement-item">
+                            <i class="fas fa-circle text-muted"></i>
+                            <span>First Transaction</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if customer.points_balance < 100 %}
+                        <div class="achievement-item">
+                            <i class="fas fa-circle text-muted"></i>
+                            <span>100 Points Club</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Animate progress bar on load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const width = progressBar.style.width;
+        progressBar.style.width = '0%';
+        setTimeout(() => {
+            progressBar.style.width = width;
+        }, 500);
+    }
+    
+    // Animate floating coins
+    const coins = document.querySelectorAll('.floating-coins i');
+    coins.forEach((coin, index) => {
+        coin.style.animationDelay = `${index * 0.5}s`;
+    });
+});
+</script>
+{% endblock %}

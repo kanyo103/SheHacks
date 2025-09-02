@@ -1,0 +1,599 @@
+{% extends "base.html" %}
+
+{% block title %}Send Money - {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-paper-plane text-mukuru me-3"></i>
+                    Send Money
+                </h1>
+                <p class="lead">Send remittances and earn loyalty points with every transaction</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Send Money Form -->
+            <div class="send-money-card">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-gradient text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            New Remittance
+                        </h3>
+                        <p class="mb-0 opacity-75">Earn 1 point for every R100 sent</p>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <form id="remittanceForm">
+                            <!-- Recipient Information -->
+                            <div class="mb-4">
+                                <label for="recipient" class="form-label fw-bold">
+                                    <i class="fas fa-user me-2"></i>
+                                    Recipient Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control form-control-lg" 
+                                       id="recipient" 
+                                       name="recipient" 
+                                       placeholder="Enter recipient's full name"
+                                       required>
+                                <div class="form-text">Enter the full name of the person receiving the money</div>
+                            </div>
+
+                            <!-- Recipient Verification -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">
+                                    <i class="fas fa-shield-check me-2"></i>
+                                    Recipient Verification
+                                    <span class="badge bg-success ms-2">Recommended</span>
+                                </label>
+                                <div class="verification-options">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="verification-card">
+                                                <label for="mukuru_card" class="form-label">
+                                                    <i class="fas fa-credit-card text-mukuru me-2"></i>
+                                                    Mukuru Card Number
+                                                </label>
+                                                <input type="text" 
+                                                       class="form-control" 
+                                                       id="mukuru_card" 
+                                                       name="mukuru_card" 
+                                                       placeholder="Enter Mukuru card number"
+                                                       onchange="clearOtherVerification('id_number')">
+                                                <div class="form-text">12-digit Mukuru card number</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="verification-card">
+                                                <label for="id_number" class="form-label">
+                                                    <i class="fas fa-id-card text-mukuru me-2"></i>
+                                                    ID Number
+                                                </label>
+                                                <input type="text" 
+                                                       class="form-control" 
+                                                       id="id_number" 
+                                                       name="id_number" 
+                                                       placeholder="Enter recipient's ID number"
+                                                       onchange="clearOtherVerification('mukuru_card')">
+                                                <div class="form-text">National ID or Passport number</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="verification-info mt-3">
+                                        <div class="alert alert-info d-flex align-items-center">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <small>
+                                                Verification helps ensure secure delivery. Use either Mukuru card number OR ID number.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Destination & Amount -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label for="destination_country" class="form-label fw-bold">
+                                        <i class="fas fa-globe-africa me-2"></i>
+                                        Send Money To
+                                    </label>
+                                    <select class="form-select form-select-lg" 
+                                            id="destination_country" 
+                                            name="destination_country" 
+                                            required 
+                                            onchange="updateCurrency()">
+                                        <option value="">Select Country</option>
+                                        <optgroup label="🌍 Africa">
+                                            <option value="ZW" data-currency="USD" data-flag="🇿🇼" data-rate="0.055">Zimbabwe (USD)</option>
+                                            <option value="ZA" data-currency="ZAR" data-flag="🇿🇦" data-rate="1.0">South Africa (ZAR)</option>
+                                            <option value="KE" data-currency="KES" data-flag="🇰🇪" data-rate="7.35">Kenya (KES)</option>
+                                            <option value="ZM" data-currency="ZMW" data-flag="🇿🇲" data-rate="1.25">Zambia (ZMW)</option>
+                                            <option value="MZ" data-currency="MZN" data-flag="🇲🇿" data-rate="3.65">Mozambique (MZN)</option>
+                                            <option value="UG" data-currency="UGX" data-flag="🇺🇬" data-rate="205.8">Uganda (UGX)</option>
+                                            <option value="TZ" data-currency="TZS" data-flag="🇹🇿" data-rate="135.2">Tanzania (TZS)</option>
+                                            <option value="MW" data-currency="MWK" data-flag="🇲🇼" data-rate="1028.5">Malawi (MWK)</option>
+                                            <option value="BW" data-currency="BWP" data-flag="🇧🇼" data-rate="0.735">Botswana (BWP)</option>
+                                            <option value="LS" data-currency="LSL" data-flag="🇱🇸" data-rate="1.0">Lesotho (LSL)</option>
+                                            <option value="AO" data-currency="AOA" data-flag="🇦🇴" data-rate="46.8">Angola (AOA)</option>
+                                            <option value="GH" data-currency="GHS" data-flag="🇬🇭" data-rate="0.825">Ghana (GHS)</option>
+                                            <option value="ET" data-currency="ETB" data-flag="🇪🇹" data-rate="2.85">Ethiopia (ETB)</option>
+                                        </optgroup>
+                                        <optgroup label="🌏 Asia">
+                                            <option value="BD" data-currency="BDT" data-flag="🇧🇩" data-rate="6.15">Bangladesh (BDT)</option>
+                                            <option value="CN" data-currency="CNY" data-flag="🇨🇳" data-rate="0.395">China (CNY)</option>
+                                            <option value="IN" data-currency="INR" data-flag="🇮🇳" data-rate="4.58">India (INR)</option>
+                                        </optgroup>
+                                        <optgroup label="🌍 Europe & Others">
+                                            <option value="EU" data-currency="EUR" data-flag="🇪🇺" data-rate="0.051">European Union (EUR)</option>
+                                            <option value="UK" data-currency="GBP" data-flag="🇬🇧" data-rate="0.044">United Kingdom (GBP)</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="amount" class="form-label fw-bold">
+                                        <i class="fas fa-rand-sign me-2"></i>
+                                        Amount to Send
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text" id="currency-symbol">R</span>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="amount" 
+                                               name="amount" 
+                                               placeholder="0.00"
+                                               min="1"
+                                               step="0.01"
+                                               required
+                                               onchange="calculateReceiveAmount()">
+                                    </div>
+                                    <div class="form-text">Minimum amount: R1.00</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Exchange Rate Info -->
+                            <div class="mb-4" id="exchange-info" style="display: none;">
+                                <div class="exchange-rate-card">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6">
+                                            <div class="exchange-rate">
+                                                <i class="fas fa-exchange-alt text-mukuru me-2"></i>
+                                                <span class="rate-text">Exchange Rate: </span>
+                                                <span class="rate-value" id="exchange-rate">1 ZAR = 0.055 USD</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="receive-amount">
+                                                <span class="receive-label">Recipient receives:</span>
+                                                <span class="receive-value" id="receive-amount">$0.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Points Preview -->
+                            <div class="points-preview mb-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Points you'll earn:</span>
+                                    <span class="points-display">
+                                        <i class="fas fa-coins text-warning me-1"></i>
+                                        <span id="pointsPreview">0</span> points
+                                    </span>
+                                </div>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" id="pointsProgress" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">1 point = R100 sent</small>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-mukuru btn-lg" id="sendButton">
+                                    <span class="button-text">
+                                        <i class="fas fa-paper-plane me-2"></i>
+                                        Send Money
+                                    </span>
+                                    <span class="button-loading d-none">
+                                        <i class="fas fa-spinner fa-spin me-2"></i>
+                                        Processing...
+                                    </span>
+                                </button>
+                                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Back to Dashboard
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Info Sidebar -->
+        <div class="col-lg-4">
+            <div class="customer-info-card mb-4">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user-circle me-2"></i>
+                            Your Account
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="customer-details">
+                            <div class="detail-item">
+                                <strong>Name:</strong>
+                                <span>{{ customer.name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Current Points:</strong>
+                                <span class="text-warning fw-bold">
+                                    <i class="fas fa-coins me-1"></i>
+                                    {{ customer.points_balance }}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Tier:</strong>
+                                <span class="tier-badge tier-{{ customer.tier.lower() }}">
+                                    {{ customer.tier }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Points Info -->
+            <div class="points-info-card">
+                <div class="card border-0 shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            How Points Work
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Earn 1 point per R100 sent
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Points added instantly
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                No expiration date
+                            </li>
+                            <li class="mb-0">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Redeem for amazing rewards
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-5">
+                <div class="success-animation mb-4">
+                    <i class="fas fa-check-circle fa-5x text-success"></i>
+                </div>
+                <h3 class="fw-bold mb-3">Transaction Successful!</h3>
+                <p class="mb-3" id="successMessage"></p>
+                <div class="points-earned mb-4">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="fas fa-coins fa-2x text-warning me-3"></i>
+                        <div>
+                            <h4 class="mb-0" id="pointsEarned">0</h4>
+                            <small class="text-muted">Points Earned</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-mukuru" onclick="sendAnother()">
+                        <i class="fas fa-plus me-2"></i>
+                        Send Another
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Animation Canvas -->
+<canvas id="animationCanvas" class="d-none"></canvas>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let animationCanvas;
+let animationContext;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize animation canvas
+    animationCanvas = document.getElementById('animationCanvas');
+    animationContext = animationCanvas.getContext('2d');
+    
+    // Set up form listeners
+    const amountInput = document.getElementById('amount');
+    const pointsPreview = document.getElementById('pointsPreview');
+    const pointsProgress = document.getElementById('pointsProgress');
+    const form = document.getElementById('remittanceForm');
+    
+    // Update points preview as user types
+    amountInput.addEventListener('input', function() {
+        const amount = parseFloat(this.value) || 0;
+        const points = Math.floor(amount / 100);
+        pointsPreview.textContent = points;
+        
+        // Update progress bar (visual feedback)
+        const progressWidth = Math.min((amount % 100) / 100 * 100, 100);
+        pointsProgress.style.width = progressWidth + '%';
+    });
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitRemittance();
+    });
+});
+
+function submitRemittance() {
+    const form = document.getElementById('remittanceForm');
+    const formData = new FormData(form);
+    const sendButton = document.getElementById('sendButton');
+    const buttonText = sendButton.querySelector('.button-text');
+    const buttonLoading = sendButton.querySelector('.button-loading');
+    
+    // Show loading state
+    buttonText.classList.add('d-none');
+    buttonLoading.classList.remove('d-none');
+    sendButton.disabled = true;
+    
+    // Start money flying animation
+    startMoneyAnimation();
+    
+    fetch('/process_remittance', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Hide loading state
+        buttonText.classList.remove('d-none');
+        buttonLoading.classList.add('d-none');
+        sendButton.disabled = false;
+        
+        if (data.success) {
+            // Show success modal with animation
+            showSuccessModal(data);
+            // Clear form
+            form.reset();
+            document.getElementById('pointsPreview').textContent = '0';
+            document.getElementById('pointsProgress').style.width = '0%';
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Hide loading state
+        buttonText.classList.remove('d-none');
+        buttonLoading.classList.add('d-none');
+        sendButton.disabled = false;
+        alert('Transaction failed. Please try again.');
+    });
+}
+
+function startMoneyAnimation() {
+    // Create floating money animation
+    const container = document.querySelector('.send-money-card');
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            createFloatingMoney();
+        }, i * 200);
+    }
+}
+
+function createFloatingMoney() {
+    const money = document.createElement('div');
+    money.innerHTML = '<i class="fas fa-money-bill-wave"></i>';
+    money.className = 'floating-money';
+    money.style.position = 'fixed';
+    money.style.left = Math.random() * window.innerWidth + 'px';
+    money.style.top = window.innerHeight + 'px';
+    money.style.fontSize = '24px';
+    money.style.color = '#28a745';
+    money.style.zIndex = '9999';
+    money.style.pointerEvents = 'none';
+    money.style.transition = 'all 2s ease-out';
+    
+    document.body.appendChild(money);
+    
+    // Animate upward
+    setTimeout(() => {
+        money.style.transform = 'translateY(-' + (window.innerHeight + 100) + 'px) rotate(360deg)';
+        money.style.opacity = '0';
+    }, 100);
+    
+    // Remove element
+    setTimeout(() => {
+        document.body.removeChild(money);
+    }, 2100);
+}
+
+function showSuccessModal(data) {
+    document.getElementById('successMessage').innerHTML = data.message;
+    document.getElementById('pointsEarned').textContent = data.points_earned;
+    
+    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+    modal.show();
+    
+    // Trigger confetti animation
+    createConfetti();
+}
+
+function createConfetti() {
+    const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+    
+    for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.top = '-10px';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.transition = 'all 3s ease-out';
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.style.transform = `translateY(${window.innerHeight + 100}px) rotate(720deg)`;
+                confetti.style.opacity = '0';
+            }, 100);
+            
+            setTimeout(() => {
+                if (document.body.contains(confetti)) {
+                    document.body.removeChild(confetti);
+                }
+            }, 3100);
+        }, i * 50);
+    }
+}
+
+function sendAnother() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('successModal'));
+    modal.hide();
+}
+
+// Clear other verification field when one is selected
+function clearOtherVerification(fieldToClear) {
+    document.getElementById(fieldToClear).value = '';
+}
+
+// Currency exchange functions
+function updateCurrency() {
+    const countrySelect = document.getElementById('destination_country');
+    const selectedOption = countrySelect.selectedOptions[0];
+    const exchangeInfo = document.getElementById('exchange-info');
+    const currencySymbol = document.getElementById('currency-symbol');
+    
+    if (selectedOption && selectedOption.value) {
+        const currency = selectedOption.getAttribute('data-currency');
+        const rate = selectedOption.getAttribute('data-rate');
+        const flag = selectedOption.getAttribute('data-flag');
+        
+        // Update currency symbol
+        const currencySymbols = {
+            'USD': '$',
+            'ZAR': 'R',
+            'KES': 'KSh',
+            'ZMW': 'ZK',
+            'MZN': 'MT',
+            'UGX': 'USh',
+            'TZS': 'TSh',
+            'MWK': 'MK',
+            'BWP': 'P',
+            'LSL': 'L',
+            'AOA': 'Kz',
+            'GHS': '₵',
+            'ETB': 'Br',
+            'BDT': '৳',
+            'CNY': '¥',
+            'INR': '₹',
+            'EUR': '€',
+            'GBP': '£'
+        };
+        
+        currencySymbol.textContent = currencySymbols[currency] || currency;
+        
+        // Show exchange rate info
+        const exchangeRate = document.getElementById('exchange-rate');
+        exchangeRate.textContent = `1 ZAR = ${rate} ${currency}`;
+        
+        exchangeInfo.style.display = 'block';
+        
+        // Calculate receive amount if amount is already entered
+        calculateReceiveAmount();
+    } else {
+        // Hide exchange info if no country selected
+        exchangeInfo.style.display = 'none';
+        currencySymbol.textContent = 'R';
+    }
+}
+
+function calculateReceiveAmount() {
+    const countrySelect = document.getElementById('destination_country');
+    const amountInput = document.getElementById('amount');
+    const receiveAmount = document.getElementById('receive-amount');
+    
+    const selectedOption = countrySelect.selectedOptions[0];
+    const amount = parseFloat(amountInput.value) || 0;
+    
+    if (selectedOption && selectedOption.value && amount > 0) {
+        const currency = selectedOption.getAttribute('data-currency');
+        const rate = parseFloat(selectedOption.getAttribute('data-rate'));
+        
+        const convertedAmount = amount * rate;
+        
+        const currencySymbols = {
+            'USD': '$',
+            'ZAR': 'R',
+            'KES': 'KSh',
+            'ZMW': 'ZK',
+            'MZN': 'MT',
+            'UGX': 'USh',
+            'TZS': 'TSh',
+            'MWK': 'MK',
+            'BWP': 'P',
+            'LSL': 'L',
+            'AOA': 'Kz',
+            'GHS': '₵',
+            'ETB': 'Br',
+            'BDT': '৳',
+            'CNY': '¥',
+            'INR': '₹',
+            'EUR': '€',
+            'GBP': '£'
+        };
+        
+        const symbol = currencySymbols[currency] || currency;
+        
+        // Format number based on currency
+        if (['USD', 'EUR', 'GBP'].includes(currency)) {
+            receiveAmount.textContent = `${symbol}${convertedAmount.toFixed(2)}`;
+        } else if (['UGX', 'TZS', 'MWK'].includes(currency)) {
+            receiveAmount.textContent = `${symbol}${Math.round(convertedAmount).toLocaleString()}`;
+        } else {
+            receiveAmount.textContent = `${symbol}${convertedAmount.toFixed(2)}`;
+        }
+    } else {
+        receiveAmount.textContent = '$0.00';
+    }
+}
+</script>
+{% endblock %}

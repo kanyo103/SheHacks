@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block title %}Receive & Collect - {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header">
+                <h1 class="display-5 fw-bold">
+                    <i class="fas fa-hands-helping text-mukuru me-3"></i>
+                    Receive & Collect
+                </h1>
+                <p class="lead">Collect money sent to you and send gifts to other Mukuru users</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Money Collections -->
+        <div class="col-lg-8">
+            <div class="section-header mb-4">
+                <h3 class="fw-bold">
+                    <i class="fas fa-inbox text-mukuru me-2"></i>
+                    Money to Collect
+                </h3>
+                <p class="text-muted">Remittances sent to you that are ready for collection</p>
+            </div>
+
+            {% if pending_collections %}
+            {% for collection in pending_collections %}
+            <div class="collection-card mb-3">
+                <div class="collection-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-1">
+                                <i class="fas fa-user me-2"></i>
+                                From {{ collection.sender_name }}
+                            </h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-calendar me-1"></i>
+                                {{ collection.date }}
+                            </p>
+                            {% if collection.verification_method %}
+                            <small class="text-success">
+                                <i class="fas fa-shield-check me-1"></i>
+                                Verified via {{ 'Mukuru Card' if collection.verification_method == 'mukuru_card' else 'ID Number' }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="collection-amount">{{ collection.amount }}</div>
+                            <span class="collection-status status-pending">
+                                <i class="fas fa-clock me-1"></i>
+                                Ready to Collect
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="collection-details">
+                                <p class="mb-2">
+                                    <strong>Collection Reference:</strong> {{ collection.reference }}
+                                </p>
+                                <p class="mb-0">
+                                    <strong>Collection Method:</strong> 
+                                    <span class="badge bg-info">{{ collection.collection_method }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-mukuru" onclick="collectMoney('{{ collection.id }}')">
+                                <i class="fas fa-hand-holding-usd me-2"></i>
+                                Collect Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h4>No Money to Collect</h4>
+                <p>You don't have any pending money collections at the moment.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Gift Sending -->
+        <div class="col-lg-4">
+            <div class="gift-send-card">
+                <div class="mb-3">
+                    <i class="fas fa-gift fa-3x text-mukuru mb-3"></i>
+                    <h4>Send a Gift</h4>
+                    <p class="text-muted">Redeem your rewards and send them as gifts to other Mukuru users</p>
+                </div>
+                
+                <div class="gift-stats mb-3">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="stat-number">{{ customer.points }}</div>
+                            <div class="stat-label">Your Points</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-number">{{ available_gifts|length }}</div>
+                            <div class="stat-label">Available Gifts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-mukuru w-100" data-bs-toggle="modal" data-bs-target="#giftModal">
+                    <i class="fas fa-gift me-2"></i>
+                    Browse & Send Gifts
+                </button>
+            </div>
+
+            <!-- Recent Gift Transactions -->
+            <div class="mt-4">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-history text-mukuru me-2"></i>
+                    Recent Gift Activity
+                </h5>
+                
+                {% if recent_gifts %}
+                {% for gift in recent_gifts %}
+                <div class="gift-activity-item mb-2">
+                    <div class="d-flex align-items-center">
+                        <div class="activity-icon">
+                            <i class="fas fa-{{ 'gift' if gift.type == 'sent' else 'heart' }} text-mukuru"></i>
+                        </div>
+                        <div class="activity-details flex-grow-1">
+                            <small class="fw-bold">
+                                {{ 'Sent' if gift.type == 'sent' else 'Received' }} {{ gift.reward_name }}
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                {{ 'To' if gift.type == 'sent' else 'From' }} {{ gift.recipient_name if gift.type == 'sent' else gift.sender_name }}
+                            </small>
+                        </div>
+                        <div class="activity-date">
+                            <small class="text-muted">{{ gift.date }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center text-muted">
+                    <small>No gift activity yet</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gift Sending Modal -->
+<div class="modal fade" id="giftModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-gift text-mukuru me-2"></i>
+                    Send a Gift to Mukuru User
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="giftForm">
+                    <!-- Gift Selection -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-star me-2"></i>
+                            Select a Gift
+                        </label>
+                        <div class="row g-3">
+                            {% for gift in available_gifts %}
+                            <div class="col-md-6">
+                                <div class="gift-option" onclick="selectGift('{{ gift.id }}', '{{ gift.name }}', {{ gift.points_cost }})">
+                                    <input type="radio" name="gift_id" value="{{ gift.id }}" class="d-none" required>
+                                    <div class="gift-card">
+                                        <div class="gift-icon">
+                                            <i class="{{ gift.icon }} fa-2x text-mukuru"></i>
+                                        </div>
+                                        <h6>{{ gift.name }}</h6>
+                                        <p class="text-muted small">{{ gift.description }}</p>
+                                        <div class="points-cost">
+                                            <span class="badge bg-mukuru">{{ gift.points_cost }} points</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Recipient Information -->
+                    <div class="mb-4">
+                        <label for="gift_recipient" class="form-label fw-bold">
+                            <i class="fas fa-user me-2"></i>
+                            Recipient (Mukuru User)
+                        </label>
+                        <input type="text" 
+                               class="form-control form-control-lg" 
+                               id="gift_recipient" 
+                               name="gift_recipient" 
+                               placeholder="Enter recipient's name or Mukuru ID"
+                               required>
+                        <div class="form-text">Must be a registered Mukuru user to receive gifts</div>
+                    </div>
+
+                    <!-- Recipient Verification -->
+                    <div class="mb-4">
+                        <label for="recipient_mukuru_id" class="form-label fw-bold">
+                            <i class="fas fa-id-badge me-2"></i>
+                            Recipient's Mukuru ID
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="recipient_mukuru_id" 
+                               name="recipient_mukuru_id" 
+                               placeholder="Enter recipient's Mukuru ID or phone number"
+                               required>
+                        <div class="form-text">This ensures the gift reaches the correct person</div>
+                    </div>
+
+                    <!-- Personal Message -->
+                    <div class="mb-4">
+                        <label for="gift_message" class="form-label fw-bold">
+                            <i class="fas fa-comment me-2"></i>
+                            Personal Message (Optional)
+                        </label>
+                        <textarea class="form-control" 
+                                  id="gift_message" 
+                                  name="gift_message" 
+                                  rows="3" 
+                                  placeholder="Write a personal message with your gift..."></textarea>
+                    </div>
+                    
+                    <div class="gift-summary d-none" id="giftSummary">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>Gift Summary</h6>
+                            <p class="mb-1"><strong>Gift:</strong> <span id="selectedGiftName">-</span></p>
+                            <p class="mb-1"><strong>Cost:</strong> <span id="selectedGiftCost">0</span> points</p>
+                            <p class="mb-0"><strong>Your Balance After:</strong> <span id="balanceAfter">{{ customer.points }}</span> points</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="giftForm" class="btn btn-mukuru">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Send Gift
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedGiftData = null;
+
+function selectGift(giftId, giftName, pointsCost) {
+    // Clear previous selections
+    document.querySelectorAll('.gift-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    
+    // Select current option
+    event.currentTarget.classList.add('selected');
+    document.querySelector(`input[value="${giftId}"]`).checked = true;
+    
+    // Store selection data
+    selectedGiftData = { giftId, giftName, pointsCost };
+    
+    // Update summary
+    document.getElementById('selectedGiftName').textContent = giftName;
+    document.getElementById('selectedGiftCost').textContent = pointsCost;
+    document.getElementById('balanceAfter').textContent = {{ customer.points }} - pointsCost;
+    
+    // Show summary
+    document.getElementById('giftSummary').classList.remove('d-none');
+}
+
+function collectMoney(collectionId) {
+    if (confirm('Are you sure you want to collect this money?')) {
+        fetch('/collect_money', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `collection_id=${encodeURIComponent(collectionId)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while collecting money.');
+        });
+    }
+}
+
+// Handle gift form submission
+document.getElementById('giftForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!selectedGiftData) {
+        alert('Please select a gift first.');
+        return;
+    }
+    
+    const formData = new FormData(this);
+    formData.append('gift_id', selectedGiftData.giftId);
+    
+    fetch('/send_gift', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            bootstrap.Modal.getInstance(document.getElementById('giftModal')).hide();
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while sending the gift.');
+    });
+});
+</script>
+
+<style>
+.gift-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gift-card {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.gift-option:hover .gift-card,
+.gift-option.selected .gift-card {
+    border-color: var(--mukuru-primary);
+    background: #fff3e0;
+}
+
+.gift-icon {
+    margin-bottom: 0.5rem;
+}
+
+.activity-icon {
+    width: 30px;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--mukuru-primary);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+</style>
+{% endblock %}
